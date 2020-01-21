@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #Shamelessly cribbed from https://github.com/dumplab/python_multicast/
 import sys
 import socket
@@ -43,13 +43,13 @@ def read(sock):
     mreq = struct.pack("4sl", socket.inet_aton(ADDRESS), socket.INADDR_ANY)
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq) ## sending IGMPv2 membership queries
     while True:
-        print(sock.recv(10240))
+        print(time.asctime(), sock.recv(10240))
         sleep(0.02)
 
 def write(sock):
     print('Writing to', ADDRESS, PORT, '...')
     while True:
-        print("Sending:", PAYLOAD)
+        print(time.asctime(), "Sending:", PAYLOAD)
         sock.sendto(bytes(PAYLOAD,encoding='UTF-8'), ADDRESS_PORT)
         sleep(1)
 
