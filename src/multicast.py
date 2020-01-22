@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #Shamelessly cribbed from https://github.com/dumplab/python_multicast/
 import sys
 import socket
