@@ -48,6 +48,7 @@ def read(sock):
 
 def write(sock):
     print('Writing to', ADDRESS, PORT, '...')
+    sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, TTL) 
     while True:
         print(time.asctime(), "Sending:", PAYLOAD)
         sock.sendto(bytes(PAYLOAD,encoding='UTF-8'), ADDRESS_PORT)
