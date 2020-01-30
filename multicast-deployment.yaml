@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-multicast
+  labels:
+    app: python-multicast
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: python-multicast
+  template:
+    metadata:
+      labels:
+        app: python-multicast
+    spec:
+      containers:
+      - name: python-multicast
+        image: georgenicoll/python-multicast:latest
+        command: ["sleep","10000"]
+        ports:
+        - containerPort: 80    
