@@ -9,7 +9,7 @@ import time
 
 ADDRESS = "239.2.2.2"
 PORT = 31001
-TTL = 3
+TTL = 5
 READ = 'read'
 WRITE = 'write'
 PAYLOAD = 'Multicast Hello'
