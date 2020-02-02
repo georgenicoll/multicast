@@ -12,7 +12,7 @@ PORT = 31001
 TTL = 5
 READ = 'read'
 WRITE = 'write'
-PAYLOAD = 'Multicast Hello'
+PAYLOAD_PREFIX = 'Multicast Hello'
 ADDRESS_PORT = (ADDRESS, PORT)
 
 def main(argv):
@@ -47,11 +47,13 @@ def read(sock):
         sleep(0.02)
 
 def write(sock):
-    print('Writing to', ADDRESS, PORT, '...')
+    hostname = socket.gethostname()
+    payload = PAYLOAD_PREFIX + ' from ' + hostname
+    print('Writing to', ADDRESS, PORT, 'as', hostname, '...')
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, TTL) 
     while True:
-        print(time.asctime(), "Sending:", PAYLOAD)
-        sock.sendto(bytes(PAYLOAD,encoding='UTF-8'), ADDRESS_PORT)
+        print(time.asctime(), "Sending:", payload)
+        sock.sendto(bytes(payload,encoding='UTF-8'), ADDRESS_PORT)
         sleep(1)
 
 if __name__ == "__main__":
