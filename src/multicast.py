@@ -51,9 +51,12 @@ def write(sock):
     payload = PAYLOAD_PREFIX + ' from ' + hostname
     print('Writing to', ADDRESS, PORT, 'as', hostname, '...')
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, TTL) 
+    num = 0
     while True:
-        print(time.asctime(), "Sending:", payload)
-        sock.sendto(bytes(payload,encoding='UTF-8'), ADDRESS_PORT)
+        thisPayload = str(num) + ': ' + payload
+        print(time.asctime(), "Sending:", thisPayload)
+        sock.sendto(bytes(thisPayload,encoding='UTF-8'), ADDRESS_PORT)
+        num = num + 1
         sleep(1)
 
 if __name__ == "__main__":
