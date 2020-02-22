@@ -1,0 +1,53 @@
+### smcrouted
+
+-- Build this on each docker machine...
+sudo apt-get update
+sudo apt-get install automake
+sudo apt-get install libcap-dev
+sudo apt-get install libsystemd-dev
+git clone git@github.com:troglobit/smcroute.git
+cd smcroute/
+checkout master
+./autogen.sh
+./configure --prefix=/usr/local --sysconfdir=/etc --localstatedir=/var
+make -j5
+sudo make install-strip
+
+-- /etc/smcroute.conf (where 10.0.0.0/24 is the home subnet):
+phyint docker0 enable
+phyint eth0 enable
+mgroup from eth0 group 239.2.2.2 source 10.0.0.0/24
+mgroup from docker0 group 239.2.2.2 source 172.17.0.0/16
+mroute from eth0 group 239.2.2.2 source 10.0.0.0/24 to docker0
+mroute from docker0 group 239.2.2.2 source 172.17.0.0/16 to eth0
+
+-- Run it in the terminal (needs to be running for multicast routing tables on the machine)
+sudo smcrouted -n -N -l debug
+
+-- Watch the routing tables
+watch sudo smcroutectl show routes
+
+### iptables (docker machine)
+
+-- List rules
+sudo iptables -L -v --line-numbers
+
+-- Add Rule for accepting multicast to docker0 (by default this doesn't match so is dropped)
+sudo iptables -I DOCKER-USER 1 -o docker0 -m pkttype --pkt-type multicast -j ACCEPT
+-- Delete the above rule after it has been added
+sudo iptables -D DOCKER-USER 1
+
+-- Zero iptables counters
+sudo iptables -Z
+
+watch sudo smcroutectl show routes
+
+### Run python-multicast on the machine
+git clone git@github.com:georgenicoll/multicast.git
+cd multicast
+src/multicast.py read|write
+
+### Run python-multicast in docker
+docker run -it georgenicoll/python-multicast
+./multicast.py read|write
+
