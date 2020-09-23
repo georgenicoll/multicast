@@ -54,6 +54,7 @@ def write(sock):
     payload = PAYLOAD_PREFIX + ' from ' + hostname
     print('Writing to', ADDRESS, PORT, 'as', hostname, '...')
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, TTL) 
+    sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_IF, socket.inet_aton(IF_ADDRESS))
     num = 0
     while True:
         thisPayload = str(num) + ': ' + payload
