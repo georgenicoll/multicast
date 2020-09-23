@@ -7,6 +7,7 @@ import multiprocessing
 from time import sleep
 import time
 
+IF_ADDRESS='<Edit This>'
 ADDRESS = "239.2.2.2"
 PORT = 31001
 TTL = 5
@@ -16,7 +17,10 @@ PAYLOAD_PREFIX = 'Multicast Hello'
 ADDRESS_PORT = (ADDRESS, PORT)
 
 def main(argv):
-    print('Arguments: ', str(argv))
+    print('Interface         : ', IF_ADDRESS)
+    print('Multicast Address : ', ADDRESS)
+    print('Port              : ', str(PORT))
+    print('Arguments         : ', str(argv))
 
     if len(argv) < 2:
         print('Need a mode.  Expecting', READ, '|', WRITE)
@@ -40,8 +44,7 @@ def read(sock):
     print('Reading from', ADDRESS, PORT, '...')
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind(ADDRESS_PORT)
-    mreq = struct.pack("4sl", socket.inet_aton(ADDRESS), socket.INADDR_ANY)
-    sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq) ## sending IGMPv2 membership queries
+    sock.setsockopt(socket.SOL_IP, socket.IP_ADD_MEMBERSHIP, socket.inet_aton(ADDRESS)+socket.inet_aton(IF_ADDRESS)) 
     while True:
         print(time.asctime(), sock.recv(10240))
         sleep(0.02)
