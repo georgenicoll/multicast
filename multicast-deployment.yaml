@@ -14,7 +14,7 @@ spec:
       labels:
         app: python-multicast
       annotations:
-        k8s.v1.cni.cncf.io/networks: weave
+        k8s.v1.cni.cncf.io/networks: weave,host-bridge
     spec:
       containers:
       - name: python-multicast
