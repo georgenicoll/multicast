@@ -8,7 +8,7 @@ from time import sleep
 import time
 
 IF_ADDRESS='<Edit This>'
-ADDRESS = "239.254.1.1"
+ADDRESS = "224.0.9.1"
 PORT = 31001
 TTL = 6
 READ = 'read'

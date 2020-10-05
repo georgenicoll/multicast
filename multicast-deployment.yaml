@@ -5,7 +5,7 @@ metadata:
   labels:
     app: python-multicast
 spec:
-  replicas: 3
+  replicas: 9
   selector:
     matchLabels:
       app: python-multicast
