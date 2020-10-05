@@ -8,16 +8,21 @@ from time import sleep
 import time
 
 IF_ADDRESS='<Edit This>'
-ADDRESS = "239.2.2.2"
+ADDRESS = "239.254.1.1"
 PORT = 31001
-TTL = 5
+TTL = 6
 READ = 'read'
 WRITE = 'write'
 PAYLOAD_PREFIX = 'Multicast Hello'
 ADDRESS_PORT = (ADDRESS, PORT)
 
 def main(argv):
-    print('Interface         : ', IF_ADDRESS)
+    if len(argv) > 1:
+        interfaceAddress = argv[2]
+    else:
+        interfaceAddress = IF_ADDRESS
+
+    print('Interface         : ', interfaceAddress)
     print('Multicast Address : ', ADDRESS)
     print('Port              : ', str(PORT))
     print('Arguments         : ', str(argv))
@@ -36,25 +41,25 @@ def main(argv):
         exit(1)
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-    sockfunc(sock)
+    sockfunc(sock, interfaceAddress)
 
     print('Finished.')
 
-def read(sock):
+def read(sock, interfaceAddress):
     print('Reading from', ADDRESS, PORT, '...')
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind(ADDRESS_PORT)
-    sock.setsockopt(socket.SOL_IP, socket.IP_ADD_MEMBERSHIP, socket.inet_aton(ADDRESS)+socket.inet_aton(IF_ADDRESS)) 
+    sock.setsockopt(socket.SOL_IP, socket.IP_ADD_MEMBERSHIP, socket.inet_aton(ADDRESS)+socket.inet_aton(interfaceAddress)) 
     while True:
         print(time.asctime(), sock.recv(10240))
         sleep(0.02)
 
-def write(sock):
+def write(sock, interfaceAddress):
     hostname = socket.gethostname()
-    payload = PAYLOAD_PREFIX + ' from ' + hostname
+    payload = PAYLOAD_PREFIX + ' from ' + hostname + ' (' + interfaceAddress + ')'
     print('Writing to', ADDRESS, PORT, 'as', hostname, '...')
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, TTL) 
-    sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_IF, socket.inet_aton(IF_ADDRESS))
+    sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_IF, socket.inet_aton(interfaceAddress))
     num = 0
     while True:
         thisPayload = str(num) + ': ' + payload
