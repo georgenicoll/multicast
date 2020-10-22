@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-#Shamelessly cribbed from https://github.com/dumplab/python_multicast/
+#Shamelessly cribbed from https://github.com/dumplab/python_multicast/a
+# and
+# https://stackoverflow.com/questions/6243276/how-to-get-the-physical-interface-ip-address-from-an-interface#6250688
+#
+import netifaces
 import sys
 import socket
 import struct
@@ -18,11 +22,13 @@ ADDRESS_PORT = (ADDRESS, PORT)
 
 def main(argv):
     if len(argv) > 1:
-        interfaceAddress = argv[2]
+        interfaceName = argv[2]
+        print('InterfaceName     : ', interfaceName)
+        interfaceAddress = getIPAddressOfInterface(interfaceName)
     else:
         interfaceAddress = IF_ADDRESS
 
-    print('Interface         : ', interfaceAddress)
+    print('IP                : ', interfaceAddress)
     print('Multicast Address : ', ADDRESS)
     print('Port              : ', str(PORT))
     print('Arguments         : ', str(argv))
@@ -44,6 +50,10 @@ def main(argv):
     sockfunc(sock, interfaceAddress)
 
     print('Finished.')
+
+# Nicked from https://code.activestate.com/recipes/439094-get-the-ip-address-associated-with-a-network-inter/
+def getIPAddressOfInterface(ifname):
+    return netifaces.ifaddresses(ifname)[netifaces.AF_INET][0]['addr']
 
 def read(sock, interfaceAddress):
     print('Reading from', ADDRESS, PORT, '...')

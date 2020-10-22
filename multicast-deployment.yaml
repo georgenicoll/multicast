@@ -5,7 +5,7 @@ metadata:
   labels:
     app: python-multicast
 spec:
-  replicas: 9
+  replicas: 1
   selector:
     matchLabels:
       app: python-multicast
@@ -14,7 +14,7 @@ spec:
       labels:
         app: python-multicast
       annotations:
-        k8s.v1.cni.cncf.io/networks: weave,host-bridge
+        k8s.v1.cni.cncf.io/networks: weave,macvlan
     spec:
       containers:
       - name: python-multicast
