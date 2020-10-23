@@ -1,8 +1,8 @@
-#FROM python:3.8.6-alpine3.12
-FROM python:3
+FROM python:3.9-alpine
 
-#RUN apk add --no-cache bash && \
-RUN    pip install --no-cache-dir netifaces
+RUN apk add --no-cache bash gcc linux-headers musl-dev && \
+    pip install netifaces && \
+    apk del gcc linux-headers musl-dev
 
 COPY src/multicast.py .
 RUN chmod a+x multicast.py
