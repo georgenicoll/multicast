@@ -21,7 +21,7 @@ PAYLOAD_PREFIX = 'Multicast Hello'
 ADDRESS_PORT = (ADDRESS, PORT)
 
 def main(argv):
-    if len(argv) > 1:
+    if len(argv) > 2:
         interfaceName = argv[2]
         print('InterfaceName     : ', interfaceName)
         interfaceAddress = getIPAddressOfInterface(interfaceName)
