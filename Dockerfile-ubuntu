@@ -1,0 +1,7 @@
+FROM ubuntu
+
+RUN apt update && \
+    apt install -y iproute2 inetutils-ping inetutils-traceroute && \
+    apt clean
+
+ENTRYPOINT [ "/bin/bash" ]

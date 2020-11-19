@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+        name: ubuntu-pods
+spec:
+        replicas: 3
+        selector:
+                matchLabels:
+                        app: ubuntu-pod
+        template:
+                metadata:
+                        labels:
+                                app: ubuntu-pod
+                spec:
+                        containers:
+                        - name: ubuntu
+                          image: georgenicoll/ubuntu
+                          command: [ "sleep", "60000" ]

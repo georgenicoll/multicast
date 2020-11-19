@@ -14,7 +14,7 @@ import time
 IF_ADDRESS='<Edit This>'
 ADDRESS = "224.0.9.1"
 PORT = 31001
-TTL = 6
+TTL = 5
 READ = 'read'
 WRITE = 'write'
 PAYLOAD_PREFIX = 'Multicast Hello'
