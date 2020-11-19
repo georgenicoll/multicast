@@ -5,7 +5,7 @@ metadata:
   labels:
     app: python-multicast
 spec:
-  replicas: 6
+  replicas: 10
   selector:
     matchLabels:
       app: python-multicast
@@ -14,11 +14,12 @@ spec:
       labels:
         app: python-multicast
       annotations:
-        k8s.v1.cni.cncf.io/networks: l2-bridge
+        k8s.v1.cni.cncf.io/networks: l3-bridge@mc0
     spec:
       containers:
       - name: python-multicast
         image: georgenicoll/python-multicast:latest
-        command: ["sleep","10000"]
+        command: ["sleep","infinity"]
         ports:
-        - containerPort: 80    
+        - containerPort: 80   
+      hostNetwork: false 
