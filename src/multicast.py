@@ -24,11 +24,11 @@ def main(argv):
     if len(argv) > 2:
         interfaceName = argv[2]
         print('InterfaceName     : ', interfaceName)
-        interfaceAddress = getIPAddressOfInterface(interfaceName)
+        interface = getIPAddressOfInterface(interfaceName)
     else:
-        interfaceAddress = IF_ADDRESS
+        interface = IF_ADDRESS
 
-    print('IP                : ', interfaceAddress)
+    print('Interface         : ', interface)
     print('Multicast Address : ', ADDRESS)
     print('Port              : ', str(PORT))
     print('Arguments         : ', str(argv))
@@ -47,7 +47,7 @@ def main(argv):
         exit(1)
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-    sockfunc(sock, interfaceAddress)
+    sockfunc(sock, interface)
 
     print('Finished.')
 
@@ -55,21 +55,22 @@ def main(argv):
 def getIPAddressOfInterface(ifname):
     return netifaces.ifaddresses(ifname)[netifaces.AF_INET][0]['addr']
 
-def read(sock, interfaceAddress):
+def read(sock, interface):
     print('Reading from', ADDRESS, PORT, '...')
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind(ADDRESS_PORT)
-    sock.setsockopt(socket.SOL_IP, socket.IP_ADD_MEMBERSHIP, socket.inet_aton(ADDRESS)+socket.inet_aton(interfaceAddress)) 
+    sock.setsockopt(socket.SOL_IP, socket.IP_ADD_MEMBERSHIP, socket.inet_aton(ADDRESS)+socket.inet_aton(interface)) 
+
     while True:
         print(time.asctime(), sock.recv(10240))
         sleep(0.02)
 
-def write(sock, interfaceAddress):
+def write(sock, interface):
     hostname = socket.gethostname()
-    payload = PAYLOAD_PREFIX + ' from ' + hostname + ' (' + interfaceAddress + ')'
+    payload = PAYLOAD_PREFIX + ' from ' + hostname + ' (' + interface + ')'
     print('Writing to', ADDRESS, PORT, 'as', hostname, '...')
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, TTL) 
-    sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_IF, socket.inet_aton(interfaceAddress))
+    sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_IF, socket.inet_aton(interface))
     num = 0
     while True:
         thisPayload = str(num) + ': ' + payload

@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -5,7 +6,7 @@ metadata:
   labels:
     app: python-multicast
 spec:
-  replicas: 10
+  replicas: 12
   selector:
     matchLabels:
       app: python-multicast
@@ -14,12 +15,20 @@ spec:
       labels:
         app: python-multicast
       annotations:
-        k8s.v1.cni.cncf.io/networks: l3-bridge@mc0
+        #k8s.v1.cni.cncf.io/networks: weave
+        #k8s.v1.cni.cncf.io/networks: myipvlan
+        k8s.v1.cni.cncf.io/networks: mymacvlan
     spec:
       containers:
       - name: python-multicast
         image: georgenicoll/python-multicast:latest
         command: ["sleep","infinity"]
         ports:
-        - containerPort: 80   
-      hostNetwork: false 
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: "10m"
+            memory: "50Mi"
+          limits:
+            cpu: "100m"
+            memory: "50Mi"
