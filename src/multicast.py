@@ -34,7 +34,7 @@ def main(argv):
     print('Arguments         : ', str(argv))
 
     if len(argv) < 2:
-        print('Need a mode.  Expecting', READ, '|', WRITE)
+        print('Need a mode and interface name.  Expecting <' + READ + '|' + WRITE + '> <interface>')
         exit(1)
 
     mode = argv[1]
